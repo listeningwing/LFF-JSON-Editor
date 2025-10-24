@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Install:
+# % cp "/Applications/LFF JSON Editor.app/Contents/Resources/jsoneditor" /usr/local/bin/
+# % chmod +x /usr/local/bin/jsoneditor
+#
+# Usage:
+# a. Open a json or plist file from command line.
+#   % jsoneditor file # open file in current folder
+#   % jsoneditor /full/path/of/file
+#
+# b. Directly piping command output into Lifofinn.
+#   % jq xxxxx | jsoneditor -
+#
+
+export app="/Applications/LFF JSON Editor.app/Contents/MacOS/LFF JSON Editor"
+if [ -z "$1" ]; then #no argument
+  "$app"
+else
+  if [[ "$1" =~ ^"/".* ]]; then
+      p=$1 #absolute path
+  else
+      p="$(pwd)/$1" #relative path
+  fi
+
+  if [[ -f "$p" ]] ; then
+    "$app" -c "$p"
+  elif [[ "$1" = "-" ]]; then
+    "$app" -c "-"
+  else
+    echo "$p does not exist."
+  fi
+fi
+
+
