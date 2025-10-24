@@ -1,5 +1,4 @@
-
-LFF JSON Editor
+# LFF JSON Editor
 
 The ultra small JSON and Plist editor.
 
