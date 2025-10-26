@@ -5,7 +5,7 @@ The ultra small JSON and Plist editor.
 
 There's a JSON editor embedded in Lifofinn code editor years, that allows user fast and visually edit JSON file or text block with tree representation, but unfortunately, many people don't know it and people must install LFF(Lifofinn) first then can use the functions of the editor. So, here, separate the editor as a standalone app with very concise UI to help people efficiently edit JSON files.
 
-
+* Correctly handle all ranges of Unicode including emojis.
 * validate JSON file or plain text block with accurate error line report.
 * construct an empty JSON or Plist tree and visually add child nodes.
 * import JSON file or Plist file (binary property list file also supported).
