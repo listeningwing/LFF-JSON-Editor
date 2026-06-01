@@ -139,7 +139,10 @@ def exit_handler(message):
         for file in inputSources:
             moveBackFile(file)
     inputSources = None
-    sys.exit(0) # Exit the program after cleanup
+    try:
+        sys.exit(0) # Exit the program after cleanup
+    except: pass
+    
 
 
 def signal_handler(sig, frame):
@@ -233,10 +236,31 @@ def base64Decode(path):
     outFile = procFileIO("base64Decode", path)
     return outFile
 
+
+def processUnicodeString(command, string):
+    global accesscode
+    strArgCmd = """
+    {
+      \"msgtype\": \"%s\",
+      \"accesscode\": \"%s\",
+      \"string\": \"%s\"
+    }
+    """
+    cmd = strArgCmd % (command, accesscode, string)
+    dict = runCommand(cmd)
+    if dict is None: return None
+    return dict["result"]
+
+
+# decode emoji mixed Unicode string
 # convert \u03ac to readble literals
-def convertUnicodeEscapes(path):
-    outFile = procFileIO("convertUnicode", path)
-    return outFile
+def decodeUnicodeEscapes(string):
+    return processUnicodeString("decodeUnicodeEscapes", string)
+
+# escape emoji mixed Unicode string
+def escapeUnicodeString(string):
+    return processUnicodeString("escapeUnicodeString", string)
+
 
 def plist2JSONFile(path):
     outFile = procFileIO("plist2JSON", path)
@@ -288,7 +312,7 @@ def initEnv():
 # needle: used to update one value of a node, must be empty when update entire key.
 # textBlock: any valid string representation of a JSON object or a plain text string.
 #            * if isRE=1, the replace operation only handle the first occurrence.
-#            * igored when operateType is 0.
+#            * ignored when operateType is 0.
 #            * used to delete one value of a node, must be empty when delete entire key.
 # path: full path of json file or plist file.
 #
@@ -459,6 +483,13 @@ def main():
     atexit.register(exit_handler, "atexit called.")
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTSTP, signal_handler)
+    
+    #string = "b1👹👨‍👩‍👧‍👧@why LFF🐶@!👗👧🏿$*&?., Lifofinn 🧚‍♀️wind"
+    #escapedString = escapeUnicodeString(string)
+    #print(ascii(escapedString))
+    #decodedString = decodeUnicodeEscapes(escapedString)
+    #print(decodedString)
+
 
     # path = "/Users/yeung/Desktop/jsoneditor.json"
     # result = validateUTF8(path)
